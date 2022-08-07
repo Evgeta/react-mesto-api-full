@@ -1,0 +1,11 @@
+.page-dialog__button_disabled {
+  border: 1px solid black;
+  color: #000000;
+  opacity: 0.2;
+  background-color: #FFFFFF;
+  cursor: not-allowed;
+}
+
+.page-dialog__button_disabled:hover {
+  background-color: #FFFFFF;
+}

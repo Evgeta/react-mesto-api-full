@@ -1,0 +1,20 @@
+.page-dialog__input {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.21;
+  height: 17px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  color: #fff;
+  margin: 40px auto 0 auto;
+  outline: none;
+  background-color: #000;
+  padding: 0;
+}
+/* 
+@media (min-width: 768px) {
+  .page-dialog__input {
+    width: 358px;
+  }
+} */

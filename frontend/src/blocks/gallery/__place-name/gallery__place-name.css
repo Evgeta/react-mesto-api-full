@@ -1,0 +1,18 @@
+.gallery__place-name {
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 206px;
+  color: black;
+  margin: 0;
+  padding: 25px 15px 31px 21px;
+}
+
+@media (min-width: 1240px) {
+  .gallery__place-name {
+    max-width: 190px;
+  }
+}

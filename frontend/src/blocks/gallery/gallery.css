@@ -1,0 +1,21 @@
+.gallery {
+  display: grid;
+  width: calc(100% - 38px);
+  grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
+  grid-template-rows: auto;
+  gap: 20px 17px;
+  padding: 36px 0 0;
+}
+
+@media screen and (min-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .gallery {
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

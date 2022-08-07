@@ -1,0 +1,4 @@
+.page-dialog__image-container {
+  display: flex;
+  position: relative;
+}

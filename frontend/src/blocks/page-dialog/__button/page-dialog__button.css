@@ -1,0 +1,29 @@
+.page-dialog__button {
+  width: 100%;
+  height: 50px;
+  background: white;
+  border-radius: 2px;
+  font-size: 18px;
+  line-height: 1.22;
+  text-align: center;
+  color: black;
+  margin: 216px auto 0 auto;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  font-weight: 400;
+}
+
+.page-dialog__button:hover {
+  background: rgba(256, 256, 256, .85);
+  transition: ease-in-out 0.2s;
+}
+
+/* @media (min-width: 768px) {
+  .page-dialog__button {
+    width: 358px;
+    height: 50px;
+    font-size: 18px;
+    margin: 18px 0 37px;
+  }
+} */

@@ -1,0 +1,9 @@
+.gallery__heart_active {
+  background-image: url("../../../../images/heart_active.svg");
+}
+
+.gallery__heart_active:hover {
+  opacity: 0.5;
+  background-image: url("../../../../images/heart_active.svg");
+  transition: ease-in-out 0.2s;
+}

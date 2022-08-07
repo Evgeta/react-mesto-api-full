@@ -1,0 +1,12 @@
+.profile__avatar-with-button {
+    display: flex;
+    justify-content: center;
+    width: 120px;
+    position: relative;
+}
+
+@media screen and (min-width: 1024px) {
+    .profile__avatar-with-button {
+        display: block;
+    }
+}

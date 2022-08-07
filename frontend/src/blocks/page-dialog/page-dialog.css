@@ -1,0 +1,8 @@
+.page-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 358px;
+  height: 100%;
+  background-color: black;
+  justify-content: center; 
+}
