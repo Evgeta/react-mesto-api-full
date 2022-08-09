@@ -1,6 +1,6 @@
 import {
   baseUrl,
-  token
+ // token
 } from './constants.js';
  
 class Api {
@@ -10,7 +10,7 @@ class Api {
   }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
-    this._token = headers.authorization;
+   // this._token = headers.authorization;
   }
 
   //проверка ответа
@@ -24,17 +24,16 @@ class Api {
   //получение карточек с сервера
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
-        headers: this._headers
+        headers: this._headers,
+        credentials: 'include',
       })
-
       .then((res) => this._checkResponse(res))
   }
 
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
-        headers: {
-          authorization: this._token,
-        }
+        headers: this._headers,
+        credentials: 'include',
       })
       .then((res) => this._checkResponse(res))
   }
@@ -43,6 +42,7 @@ class Api {
     return fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
         headers: this._headers,
+        credentials: 'include',
         body: JSON.stringify({
           name: data.name,
           about: data.about
@@ -55,6 +55,7 @@ class Api {
     return fetch(`${this._baseUrl}/cards`, {
         method: 'POST',
         headers: this._headers,
+        credentials: 'include',
         body: JSON.stringify({
           name: data.name,
           link: data.link
@@ -66,7 +67,8 @@ class Api {
   deleteCard(_id) {
     return fetch(`${this._baseUrl}/cards/${_id}`, {
         method: 'DELETE',
-        headers: this._headers
+        headers: this._headers,
+        credentials: 'include',
       })
       .then((res) => this._checkResponse(res))
   }
@@ -74,7 +76,8 @@ class Api {
   setLike(data) {
     return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
         method: 'PUT',
-        headers: this._headers
+        headers: this._headers,
+        credentials: 'include',
       })
       .then((res) => this._checkResponse(res))
   }
@@ -82,7 +85,8 @@ class Api {
   removeLike(data) {
     return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
         method: 'DELETE',
-        headers: this._headers
+        headers: this._headers,
+        credentials: 'include',
       })
       .then((res) => this._checkResponse(res))
   }
@@ -90,10 +94,8 @@ class Api {
   setAvatar(data) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
         method: 'PATCH',
-        headers: {
-          authorization: this._token,
-          'Content-Type': 'application/json'
-        },
+        headers: this._headers,
+        credentials: 'include',
         body: JSON.stringify({
           avatar: data.avatar
         })
@@ -114,7 +116,8 @@ class Api {
 export const api = new Api({
   baseUrl: baseUrl,
   headers: {
-    authorization: token,
+   // authorization: token,
+    'Accept': 'application/json',
     'Content-Type': 'application/json'
   }
 });

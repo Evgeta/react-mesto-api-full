@@ -13,7 +13,7 @@ import InfoTooltip from './InfoTooltip';
 import Login from "./Login";
 import Register from "./Register";
 
-import {Route, Switch, useHistory } from 'react-router-dom';
+import {Route, Switch, useHistory, Redirect } from 'react-router-dom';
 
 import ProtectedRoute from "./ProtectedRoute"; // импортируем HOC
 
@@ -48,6 +48,7 @@ function App() {
 
   
   const [loggedIn, setLoggedIn] = useState(false);
+  // const [registered, setRegistered] = useState(false);
   const [userEmail, setUserEmail] = useState("Начало");
 
   const [popupInfo, setPopupInfo] = useState({
@@ -148,33 +149,48 @@ function App() {
   }
 
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()
-    ])
-      .then(([userInfo, cardsFromServer
-      ]) => {
-          setCurrentUser(userInfo);
-          setCards(cardsFromServer);        
+      api
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+        setLoggedIn(true);
+       // setProfileEmail(res.email);
+        console.log('Ответ на запрос о пользователе');
+        console.log(res);
+        history.push('/');
       })
       .catch((err) => {
+        console.log('Ответ на запрос о пользователе - catch');
+        console.log(err);
+        setLoggedIn(false);
+        history.push('/sign-in')
+      });
+
+       api.getInitialCards()
+       .then((cardsFromServer) => {
+         setCards(cardsFromServer);
+      })
+      .catch((err) => {
+        console.log(`Вы не авторизованы`);
         console.log(`Ошибка: ${err.status}`)
       })
-    }, [])
+    }, [history, loggedIn])
 
-//проверка токена пользователя при монтировании App
-useEffect(() => {
-  const jwt = localStorage.getItem('jwt');
-  if (jwt) {
-    auth.checkToken(jwt)
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setUserEmail(res.data.email);
-          history.push('/');
-        }
-      })
-      .catch(err => console.log(err));
-  }
-}, [history]);
+// //проверка токена пользователя при монтировании App
+// useEffect(() => {
+//   const jwt = localStorage.getItem('jwt');
+//   if (jwt) {
+//     auth.checkToken(jwt)
+//       .then((res) => {
+//         if (res) {
+//           setLoggedIn(true);
+//           setUserEmail(res.data.email);
+//           history.push('/');
+//         }
+//       })
+//       .catch(err => console.log(err));
+//   }
+// }, [history]);
 
 function handleRegistration(password, email) {
   auth.register(password, email).then(
@@ -184,6 +200,7 @@ function handleRegistration(password, email) {
           status: 'success',
           popupMessage: 'Вы успешно зарегистрировались!'
         })
+      // setRegistered(true);
        setIsInfoTooltipOpen(true);
        history.push("/sign-in");
       }
@@ -200,22 +217,26 @@ function handleRegistration(password, email) {
   function handleLogin(password, email) {
    auth.authorize(password, email)
    .then ((data) => {
-        localStorage.setItem("jwt", data.token);
+      if(data) {
         setLoggedIn(true);
         setUserEmail(email);
         setPopupInfo({
           status: 'success',
           popupMessage: 'Вы успешно вошли на закрытую часть сайта!'
-        })
+        }) }
+        else {
         setIsInfoTooltipOpen(true);
-        history.push("/");
-       })
+        }
+      history.push("/");
+      }
+      )
       .catch((err) => {
          setPopupInfo({
           status: 'error',
           popupMessage: 'Что-то пошло не так! Попробуйте ещё раз.'
         })
         setIsInfoTooltipOpen(true);
+        setLoggedIn(false);
       })
   }
   
@@ -226,13 +247,21 @@ function handleRegistration(password, email) {
       setUserEmail('');
       history.push('/sign-up');
     }
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-      <div className="page__container">
-    <Header userEmail={userEmail}  onSignOut={handleSignOut}/>
+  <div className="page">
+   <div className="page__container">
+   <CurrentUserContext.Provider value={currentUser}>
+      <Header userEmail={userEmail}  onSignOut={handleSignOut}/>
+    
     <Switch> 
-    <ProtectedRoute
+      <Route path="/sign-in">
+        <Login handleLogin={handleLogin}/>
+      </Route>
+      <Route path="/sign-up">
+        <Register handleRegistration={handleRegistration}/>
+      </Route>
+         <ProtectedRoute
             exact path="/"
             loggedIn={loggedIn}
             onEditProfile={handleEditProfileClick} 
@@ -244,21 +273,8 @@ function handleRegistration(password, email) {
             onDeleteIconClick={handleDeletePopupOpen}
             component={Main}
           >
-      </ProtectedRoute>
-      <Route path="/sign-in">
-        <Login handleLogin={handleLogin}/>
-      </Route>
-      <Route path="/sign-up">
-        <Register handleRegistration={handleRegistration}/>
-      </Route>
-   </Switch>   
-   {loggedIn && <Footer />}
-
-   <InfoTooltip
-      isOpen={isInfoTooltipOpen}
-      onClose={closeAllPopups}
-      popupInfo={popupInfo}
-   />
+        </ProtectedRoute>
+    {loggedIn && <Footer />}
 
    <EditProfilePopup 
       isOpen={isEditProfilePopupOpen} 
@@ -289,9 +305,25 @@ function handleRegistration(password, email) {
       onClose={closeAllPopups}
     />
 
+<Route exact path="/">
+    {loggedIn ? (
+      <Redirect to="/sign-in" />
+    ) : (
+      <Redirect to="/sign-up" />
+      )}
+   </Route>
+  </Switch>
+  </CurrentUserContext.Provider>
+
+  <InfoTooltip
+      isOpen={isInfoTooltipOpen}
+      onClose={closeAllPopups}
+      popupInfo={popupInfo}
+   />
+    {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
   </div>
 </div>
-</CurrentUserContext.Provider>
+
 );}
 
 export default App;
