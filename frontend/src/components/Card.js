@@ -5,12 +5,6 @@ import deleteIcon from '../images/delete_icon.svg';
 
 function Card({card, onCardClick, onCardLike, onCardDelete}) {
   const currentUser = React.useContext(CurrentUserContext);
-
-  console.log('currentUser');
-  console.log(currentUser);
-  console.log('card');
-  console.log(card);
-
   const isOwn = card.owner === currentUser._id;
   const cardDeleteButtonClassName = (`gallery__delete-icon ${!isOwn && 'gallery__delete-icon_hidden'}`); 
   const isLiked = card.likes.some(i =>  i === currentUser._id );

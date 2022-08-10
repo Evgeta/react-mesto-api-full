@@ -88,10 +88,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-   console.log('внутри handleCardLike');
-   console.log('card');
-   console.log(card);
-
+   
     const isLiked = card.likes.some(i => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
@@ -120,7 +117,7 @@ function App() {
   function handleUpdateUser(user) {
       api.setUserInfo(user)
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch((err) => {
@@ -131,7 +128,7 @@ function App() {
   function handleUpdateAvatar(user) {
     api.setAvatar(user)
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch((err) => {
@@ -142,7 +139,7 @@ function App() {
   function handleAddPlace(card) {
     api.addNewCard(card)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([newCard.card, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {
