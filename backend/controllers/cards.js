@@ -68,6 +68,8 @@ module.exports.deleteCardById = (req, res, next) => {
 
 // Поставить лайк карточке
 module.exports.likeCard = (req, res, next) => {
+  console.log('req внутри likeCard');
+  console.log(req);
   Card.findByIdAndUpdate(
     req.params.cardId,
     {

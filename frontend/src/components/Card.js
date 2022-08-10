@@ -13,9 +13,7 @@ function Card({card, onCardClick, onCardLike, onCardDelete}) {
 
   const isOwn = card.owner === currentUser._id;
   const cardDeleteButtonClassName = (`gallery__delete-icon ${!isOwn && 'gallery__delete-icon_hidden'}`); 
-  // const isLiked = card.likes.some(i => i === currentUser._id);
-  // const isLiked = card.likes.some(i =>  i === currentUser._id );
-  const isLiked = false;
+  const isLiked = card.likes.some(i =>  i === currentUser._id );
   const cardLikeButtonClassName = (`gallery__heart ${isLiked && 'gallery__heart_active'}`);  
 
   function handleLikeClick(card) {

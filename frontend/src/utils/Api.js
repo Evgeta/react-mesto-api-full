@@ -86,7 +86,10 @@ class Api {
   }
 
   setLike(data) {
-    return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
+    console.log('внутри setLike data');
+    console.log(data);
+   // return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
+    return fetch(`${this._baseUrl}/cards/${data._id}/likes`, {
         method: 'PUT',
         headers: this._getHeaders(),
       })
@@ -94,7 +97,8 @@ class Api {
   }
 
   removeLike(data) {
-    return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
+  //  return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
+    return fetch(`${this._baseUrl}/cards/${data._id}/likes`, {
         method: 'DELETE',
         headers: this._getHeaders(),
       })
