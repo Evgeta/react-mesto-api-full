@@ -11,8 +11,8 @@ module.exports.getCards = (req, res, next) => {
       if (!cards) {
         return next(new NotFoundError('Не удалось найти карочки'));
       }
-      return res.status(200).send({
-        data: cards,
+      return res.send({
+        cards,
       });
     })
     .catch((err) => {
@@ -33,8 +33,8 @@ module.exports.createCard = (req, res, next) => {
     link,
     owner,
   })
-    .then((card) => res.status(200).send({
-      data: card,
+    .then((card) => res.send({
+      card,
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {

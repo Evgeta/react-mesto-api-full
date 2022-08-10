@@ -14,6 +14,10 @@ function Main({
 }){
 
   const currentUser = useContext(CurrentUserContext);
+  console.log('cards внутри main');
+  console.log(cards);
+  console.log(cards.cards);
+  // const cardsArray  = Array.from(cards); 
 
   return (
      <main className="content">
@@ -37,7 +41,7 @@ function Main({
         <section className="gallery">
           {
             cards.map((card) => ( 
-              <Card
+             <Card
               key = {card._id}
               card = {card}
               onCardClick = {onCardClick}

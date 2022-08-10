@@ -1,6 +1,5 @@
 import {
   baseUrl,
- // token
 } from './constants.js';
  
 class Api {
@@ -9,8 +8,15 @@ class Api {
     headers
   }) {
     this._baseUrl = baseUrl;
-    this._headers = headers;
-   // this._token = headers.authorization;
+    this._headers = headers; 
+  }
+  
+  _getHeaders() {
+    const jwt = localStorage.getItem('jwt');
+    return {
+      'Authorization': `Bearer ${jwt}`,
+      ...this._headers,
+    };
   }
 
   //проверка ответа
@@ -23,26 +29,34 @@ class Api {
 
   //получение карточек с сервера
   getInitialCards() {
-    return fetch(`${this._baseUrl}/cards`, {
-        headers: this._headers,
-        credentials: 'include',
+    console.log('Внутри getInitialCardsgetInitialCards 1');  
+    console.log(`${this._baseUrl}/cards`);
+    console.log(this._getHeaders());
+    
+
+
+      return fetch(`${this._baseUrl}/cards`, {
+        method: 'GET',
+        headers: this._getHeaders()
       })
-      .then((res) => this._checkResponse(res))
+      .then((res) => this._checkResponse(res)
+      )
   }
 
   getUserInfo() {
+    console.log('this._getHeaders(); внутри getUserInfo' );
+    console.log(this._getHeaders());
     return fetch(`${this._baseUrl}/users/me`, {
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders()
       })
-      .then((res) => this._checkResponse(res))
+      .then((res) => this._checkResponse(res)
+      )
   }
 
   setUserInfo(data) {
     return fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders(),
         body: JSON.stringify({
           name: data.name,
           about: data.about
@@ -54,8 +68,7 @@ class Api {
   addNewCard(data) {
     return fetch(`${this._baseUrl}/cards`, {
         method: 'POST',
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders(),
         body: JSON.stringify({
           name: data.name,
           link: data.link
@@ -67,8 +80,7 @@ class Api {
   deleteCard(_id) {
     return fetch(`${this._baseUrl}/cards/${_id}`, {
         method: 'DELETE',
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders(),
       })
       .then((res) => this._checkResponse(res))
   }
@@ -76,8 +88,7 @@ class Api {
   setLike(data) {
     return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
         method: 'PUT',
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders(),
       })
       .then((res) => this._checkResponse(res))
   }
@@ -85,8 +96,7 @@ class Api {
   removeLike(data) {
     return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
         method: 'DELETE',
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders(),
       })
       .then((res) => this._checkResponse(res))
   }
@@ -94,8 +104,7 @@ class Api {
   setAvatar(data) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
         method: 'PATCH',
-        headers: this._headers,
-        credentials: 'include',
+        headers: this._getHeaders(),
         body: JSON.stringify({
           avatar: data.avatar
         })
@@ -116,8 +125,7 @@ class Api {
 export const api = new Api({
   baseUrl: baseUrl,
   headers: {
-   // authorization: token,
-    'Accept': 'application/json',
+  //  authorization: token,
     'Content-Type': 'application/json'
   }
 });

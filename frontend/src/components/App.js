@@ -13,7 +13,7 @@ import InfoTooltip from './InfoTooltip';
 import Login from "./Login";
 import Register from "./Register";
 
-import {Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import {Route, Switch, useHistory } from 'react-router-dom';
 
 import ProtectedRoute from "./ProtectedRoute"; // импортируем HOC
 
@@ -45,10 +45,8 @@ function App() {
     link: '',
     about: ''
   });
-
   
   const [loggedIn, setLoggedIn] = useState(false);
-  // const [registered, setRegistered] = useState(false);
   const [userEmail, setUserEmail] = useState("Начало");
 
   const [popupInfo, setPopupInfo] = useState({
@@ -90,7 +88,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api.changeLikeCardStatus(card, !isLiked).then((newCard) => {
@@ -148,59 +146,71 @@ function App() {
       })
   }
 
+  // useEffect(() => {
+  //   Promise.all([api.getUserInfo(), api.getInitialCards()
+  //   ])
+  //     .then(([userInfo, cardsFromServer
+  //     ]) => {
+  //         setCurrentUser(userInfo);
+  //         console.log('Попытка отрисовать информацию по пользователю');
+  //         console.log(userInfo);
+  //         setCards(cardsFromServer);    
+  //         console.log(cardsFromServer);    
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Ошибка: ${err.status}`)
+  //     })
+  //   }, [])
+
+  // получаем карточки и информацию об авторизованном пользователе
   useEffect(() => {
-      api
-      .getUserInfo()
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+            .then(([userInfo, cardsFromServer
+            ]) => {
+                setCurrentUser(userInfo);
+                console.log('Попытка отрисовать информацию по пользователю');
+                console.log(userInfo);
+                console.log('Попытка отрисовать карточки');
+                setCards(cardsFromServer.cards);    
+                console.log(cardsFromServer);    
+                console.log(cardsFromServer.cards);    
+            })
+            .catch((err) => {
+              console.log(`Ошибка: ${err.status}`)
+            })
+      }
+  }, [loggedIn])
+
+
+
+//проверка токена пользователя при монтировании App
+useEffect(() => {
+  const jwt = localStorage.getItem('jwt');
+  if (jwt) {
+    auth.checkToken(jwt)
       .then((res) => {
-        setCurrentUser(res);
-        setLoggedIn(true);
-       // setProfileEmail(res.email);
-        console.log('Ответ на запрос о пользователе');
-        console.log(res);
-        history.push('/');
+        if (res) {
+          setLoggedIn(true);
+          setUserEmail(res.data.email);
+          history.push('/');
+        }
       })
-      .catch((err) => {
-        console.log('Ответ на запрос о пользователе - catch');
-        console.log(err);
-        setLoggedIn(false);
-        history.push('/sign-in')
-      });
-
-       api.getInitialCards()
-       .then((cardsFromServer) => {
-         setCards(cardsFromServer);
-      })
-      .catch((err) => {
-        console.log(`Вы не авторизованы`);
-        console.log(`Ошибка: ${err.status}`)
-      })
-    }, [history, loggedIn])
-
-// //проверка токена пользователя при монтировании App
-// useEffect(() => {
-//   const jwt = localStorage.getItem('jwt');
-//   if (jwt) {
-//     auth.checkToken(jwt)
-//       .then((res) => {
-//         if (res) {
-//           setLoggedIn(true);
-//           setUserEmail(res.data.email);
-//           history.push('/');
-//         }
-//       })
-//       .catch(err => console.log(err));
-//   }
-// }, [history]);
+      .catch(err => console.log(err));
+  }
+}, [history]);
 
 function handleRegistration(password, email) {
   auth.register(password, email).then(
     (res) => {
-      if (res.data) {
+      console.log('Внутри handleRegistration');
+      console.log(res);
+      console.log(res.data);
+      if (res) {
         setPopupInfo({
           status: 'success',
           popupMessage: 'Вы успешно зарегистрировались!'
         })
-      // setRegistered(true);
        setIsInfoTooltipOpen(true);
        history.push("/sign-in");
       }
@@ -217,26 +227,25 @@ function handleRegistration(password, email) {
   function handleLogin(password, email) {
    auth.authorize(password, email)
    .then ((data) => {
-      if(data) {
+        console.log('Внутри handleLogin');
+        console.log(data);
+        console.log(data.token);
+        localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
         setUserEmail(email);
         setPopupInfo({
           status: 'success',
           popupMessage: 'Вы успешно вошли на закрытую часть сайта!'
-        }) }
-        else {
+        })
         setIsInfoTooltipOpen(true);
-        }
-      history.push("/");
-      }
-      )
+        history.push("/");
+       })
       .catch((err) => {
          setPopupInfo({
           status: 'error',
           popupMessage: 'Что-то пошло не так! Попробуйте ещё раз.'
         })
         setIsInfoTooltipOpen(true);
-        setLoggedIn(false);
       })
   }
   
@@ -245,23 +254,15 @@ function handleRegistration(password, email) {
       setLoggedIn(false);
       localStorage.removeItem('jwt');
       setUserEmail('');
-      history.push('/sign-up');
+      history.push('/sign-in');
     }
-
   return (
-  <div className="page">
-   <div className="page__container">
-   <CurrentUserContext.Provider value={currentUser}>
-      <Header userEmail={userEmail}  onSignOut={handleSignOut}/>
-    
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+      <div className="page__container">
+    <Header userEmail={userEmail}  onSignOut={handleSignOut}/>
     <Switch> 
-      <Route path="/sign-in">
-        <Login handleLogin={handleLogin}/>
-      </Route>
-      <Route path="/sign-up">
-        <Register handleRegistration={handleRegistration}/>
-      </Route>
-         <ProtectedRoute
+    <ProtectedRoute
             exact path="/"
             loggedIn={loggedIn}
             onEditProfile={handleEditProfileClick} 
@@ -273,8 +274,21 @@ function handleRegistration(password, email) {
             onDeleteIconClick={handleDeletePopupOpen}
             component={Main}
           >
-        </ProtectedRoute>
-    {loggedIn && <Footer />}
+      </ProtectedRoute>
+      <Route path="/sign-in">
+        <Login handleLogin={handleLogin}/>
+      </Route>
+      <Route path="/sign-up">
+        <Register handleRegistration={handleRegistration}/>
+      </Route>
+   </Switch>   
+   {loggedIn && <Footer />}
+
+   <InfoTooltip
+      isOpen={isInfoTooltipOpen}
+      onClose={closeAllPopups}
+      popupInfo={popupInfo}
+   />
 
    <EditProfilePopup 
       isOpen={isEditProfilePopupOpen} 
@@ -305,25 +319,9 @@ function handleRegistration(password, email) {
       onClose={closeAllPopups}
     />
 
-<Route exact path="/">
-    {loggedIn ? (
-      <Redirect to="/sign-in" />
-    ) : (
-      <Redirect to="/sign-up" />
-      )}
-   </Route>
-  </Switch>
-  </CurrentUserContext.Provider>
-
-  <InfoTooltip
-      isOpen={isInfoTooltipOpen}
-      onClose={closeAllPopups}
-      popupInfo={popupInfo}
-   />
-    {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
   </div>
 </div>
-
+</CurrentUserContext.Provider>
 );}
 
 export default App;

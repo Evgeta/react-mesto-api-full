@@ -155,11 +155,12 @@ module.exports.login = (req, res, next) => {
           const token = jwt.sign({
             _id: user._id,
           }, secret, { expiresIn: '7d' });
-          res.status(200);
-          res.cookie('jwt', token, {
-            maxAge: 3600000,
-            httpOnly: true,
-          });
+          res.send({ token });
+          // res.status(200);
+          // res.cookie('jwt', token, {
+          //   maxAge: 3600000,
+          //   httpOnly: true,
+          // });
           return res.send({ message: 'Вы успешно авторизовались.' });
         })
         .catch((err) => next(err));
