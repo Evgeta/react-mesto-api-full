@@ -147,22 +147,6 @@ function App() {
       })
   }
 
-  // useEffect(() => {
-  //   Promise.all([api.getUserInfo(), api.getInitialCards()
-  //   ])
-  //     .then(([userInfo, cardsFromServer
-  //     ]) => {
-  //         setCurrentUser(userInfo);
-  //         console.log('Попытка отрисовать информацию по пользователю');
-  //         console.log(userInfo);
-  //         setCards(cardsFromServer);    
-  //         console.log(cardsFromServer);    
-  //     })
-  //     .catch((err) => {
-  //       console.log(`Ошибка: ${err.status}`)
-  //     })
-  //   }, [])
-
   // получаем карточки и информацию об авторизованном пользователе
   useEffect(() => {
     if (loggedIn) {
@@ -170,20 +154,13 @@ function App() {
             .then(([userInfo, cardsFromServer
             ]) => {
                 setCurrentUser(userInfo);
-                console.log('Попытка отрисовать информацию по пользователю');
-                console.log(userInfo);
-                console.log('Попытка отрисовать карточки');
                 setCards(cardsFromServer.cards);    
-                console.log(cardsFromServer);    
-                console.log(cardsFromServer.cards);    
             })
             .catch((err) => {
               console.log(`Ошибка: ${err.status}`)
             })
       }
   }, [loggedIn])
-
-
 
 //проверка токена пользователя при монтировании App
 useEffect(() => {
@@ -192,8 +169,8 @@ useEffect(() => {
     auth.checkToken(jwt)
       .then((res) => {
         if (res) {
-          setLoggedIn(true);
-          setUserEmail(res.data.email);
+          setLoggedIn(true);          
+          setUserEmail(res.email);
           history.push('/');
         }
       })
@@ -204,10 +181,7 @@ useEffect(() => {
 function handleRegistration(password, email) {
   auth.register(password, email).then(
     (res) => {
-      console.log('Внутри handleRegistration');
-      console.log(res);
-      console.log(res.data);
-      if (res) {
+       if (res) {
         setPopupInfo({
           status: 'success',
           popupMessage: 'Вы успешно зарегистрировались!'
@@ -228,9 +202,6 @@ function handleRegistration(password, email) {
   function handleLogin(password, email) {
    auth.authorize(password, email)
    .then ((data) => {
-        console.log('Внутри handleLogin');
-        console.log(data);
-        console.log(data.token);
         localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
         setUserEmail(email);

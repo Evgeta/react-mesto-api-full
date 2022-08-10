@@ -29,13 +29,7 @@ class Api {
 
   //получение карточек с сервера
   getInitialCards() {
-    console.log('Внутри getInitialCardsgetInitialCards 1');  
-    console.log(`${this._baseUrl}/cards`);
-    console.log(this._getHeaders());
-    
-
-
-      return fetch(`${this._baseUrl}/cards`, {
+    return fetch(`${this._baseUrl}/cards`, {
         method: 'GET',
         headers: this._getHeaders()
       })
@@ -44,8 +38,6 @@ class Api {
   }
 
   getUserInfo() {
-    console.log('this._getHeaders(); внутри getUserInfo' );
-    console.log(this._getHeaders());
     return fetch(`${this._baseUrl}/users/me`, {
         headers: this._getHeaders()
       })
@@ -86,10 +78,7 @@ class Api {
   }
 
   setLike(data) {
-    console.log('внутри setLike data');
-    console.log(data);
-   // return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
-    return fetch(`${this._baseUrl}/cards/${data._id}/likes`, {
+     return fetch(`${this._baseUrl}/cards/${data._id}/likes`, {
         method: 'PUT',
         headers: this._getHeaders(),
       })
@@ -97,7 +86,6 @@ class Api {
   }
 
   removeLike(data) {
-  //  return fetch(`${this._baseUrl}/cards/likes/${data._id}`, {
     return fetch(`${this._baseUrl}/cards/${data._id}/likes`, {
         method: 'DELETE',
         headers: this._getHeaders(),
