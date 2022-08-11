@@ -53,9 +53,10 @@ app.use(helmet());
 
 const options = {
   origin: [
+    'http://mesto.evgeta.nomoredomains.sbs',
+    'https://mesto.evgeta.nomoredomains.sbs',
     'localhost:3000',
     'localhost:3001',
-    'http://localhost:3001',
     'https://localhost:3001',
     'http://localhost:3000',
     'https://localhost:3000',
