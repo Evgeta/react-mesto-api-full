@@ -35,7 +35,7 @@ app.use(helmet());
 
 // app.use((req, res, next) => {
 //   const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
-//   // console.log(origin);
+
 //   const { method } = req;
 //   const reqHeaders = req.headers['access-control-request-headers'];
 //   if (allowedCors.includes(origin)) {
@@ -55,19 +55,18 @@ const options = {
   origin: [
     'http://mesto.evgeta.nomoredomains.sbs',
     'https://mesto.evgeta.nomoredomains.sbs',
-    'localhost:3000',
-    'localhost:3001',
     'http://localhost:3000',
     'http://localhost:3001',
   ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+  // methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  // preflightContinue: false,
+  // optionsSuccessStatus: 204,
+  // allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 };
-app.use('*', cors(options));
+// app.use('*', cors(options));
 // app.use(cors());
+app.use(cors(options));
 
 app.use(requestLogger); // подключаем логгер запросов
 
