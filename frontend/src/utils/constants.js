@@ -3,7 +3,7 @@
 
 // export const baseUrl = 'http://localhost:3000';
 
-export const baseUrl = 'https://api.mesto.evgeta.nomoredomains.sbs';
+export const baseUrl = 'http://api.mesto.evgeta.nomoredomains.sbs';
 
 // mesto.evgeta.nomoredomains.sbs
 
@@ -12,5 +12,5 @@ export const baseUrl = 'https://api.mesto.evgeta.nomoredomains.sbs';
 //базовый URL для аутентификации
 // export const BASE_URL = 'https://auth.nomoreparties.co';
 // export const BASE_URL = 'http://localhost:3000';
-export const BASE_URL = 'https://api.mesto.evgeta.nomoredomains.sbs';
+export const BASE_URL = 'http://api.mesto.evgeta.nomoredomains.sbs';
 
