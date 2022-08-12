@@ -20,8 +20,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 // Массив разешённых доменов
 const allowedCors = [
-  'http://mesto.evgeta.nomoredomains.sbs',
   'https://mesto.evgeta.nomoredomains.sbs',
+  'http://mesto.evgeta.nomoredomains.sbs',
   'http://localhost:3000',
   'http://localhost:3001',
 ];

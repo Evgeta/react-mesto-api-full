@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
 
   const token = authorization.replace('Bearer ', '');
 
-  const { NODE_ENV, JWT_SECRET = 'dev-key' } = process.env;
+  const { NODE_ENV, JWT_SECRET = 'dev-secret' } = process.env;
   const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
   if (!token) {
     return next(new UnauthorizedError('Ошибка авторизации'));

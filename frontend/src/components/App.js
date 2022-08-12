@@ -154,7 +154,7 @@ function App() {
             .then(([userInfo, cardsFromServer
             ]) => {
                 setCurrentUser(userInfo);
-                setCards(cardsFromServer.cards);    
+                setCards(cardsFromServer.cards.reverse());    
             })
             .catch((err) => {
               console.log(`Ошибка: ${err.status}`)
