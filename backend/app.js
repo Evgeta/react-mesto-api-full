@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-// const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const errorHandler = require('./middlewares/errorHandler');
@@ -48,23 +47,6 @@ app.use((req, res, next) => {
   next();
   return null;
 });
-
-// const options = {
-//   origin: [
-//     'http://mesto.evgeta.nomoredomains.sbs',
-//     'https://mesto.evgeta.nomoredomains.sbs',
-//     'http://localhost:3000',
-//     'http://localhost:3001',
-//   ],
-// methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-// preflightContinue: false,
-// optionsSuccessStatus: 204,
-// allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-//   credentials: true,
-// };
-// app.use('*', cors(options));
-// app.use(cors());
-// app.use(cors(options));
 
 app.use(requestLogger); // подключаем логгер запросов
 
